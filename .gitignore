@@ -1,0 +1,44 @@
+# Virtual environment
+# Virtual environments
+# Ignore all .env files anywhere in the project
+**/.env
+**/*.env
+
+# Ignore all virtual environments inside backend (any depth)
+backend/venv/
+backend/venv/**
+
+# Ignore Django settings and env files
+backend/**/settings.py
+backend/**/.env
+.env
+
+# Ignore all Django settings.py files in any directory
+**/settings.py
+# Ignore settings files anywhere under backend
+backend/**/settings.py
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
