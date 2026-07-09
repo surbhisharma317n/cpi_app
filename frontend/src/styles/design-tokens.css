@@ -1,0 +1,114 @@
+/* ============ DESIGN TOKENS ============ */
+:root {
+  /* Typography */
+  --font-display: 'Noto Sans', system-ui, sans-serif;
+  --font-sans: 'Noto Sans', system-ui, sans-serif;
+  --font-mono: 'Noto Sans Mono', 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Backgrounds & Surfaces */
+  --bg: #F3F4F0;
+  --surface: #FFFFFF;
+  --surface-2: #F6F7F3;
+  --surface-3: #EEF0EA;
+
+  /* Borders */
+  --border: #DDE1D9;
+  --border-strong: #BFC6BB;
+
+  /* Rail (Sidebar) */
+  --rail: #0C2238;
+  --rail-2: #0A1D30;
+  --rail-line: #1E3A56;
+  --rail-text: #B7C6DA;
+  --rail-text-dim: #7B90AC;
+
+  /* Text Colors */
+  --ink: #0B1E33;
+  --text: #1C2A38;
+  --muted: #54636F;
+  --faint: #727F8B;
+
+  /* Primary Color */
+  --primary: #1D52D6;
+  --primary-600: #1A48BD;
+  --primary-700: #163C9E;
+  --primary-soft: #E7EDFB;
+
+  /* Status Colors */
+  --saffron: #B85C00;
+  --saffron-soft: #FBEAD3;
+  --green: #0F7A42;
+  --green-soft: #D7EFE0;
+  --red: #C0362C;
+  --red-soft: #FBE2DF;
+  --violet: #5B3FC0;
+  --violet-soft: #E9E3FA;
+
+  /* Tricolor */
+  --tri-saffron: #FF9933;
+  --tri-green: #138808;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 35, 60, 0.06), 0 1px 1px rgba(15, 35, 60, 0.04);
+  --shadow: 0 4px 14px rgba(15, 35, 60, 0.07), 0 1px 3px rgba(15, 35, 60, 0.05);
+  --shadow-lg: 0 18px 40px rgba(15, 35, 60, 0.13), 0 4px 12px rgba(15, 35, 60, 0.07);
+
+  /* Radius */
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+}
+
+/* High-contrast mode (accessibility toolbar) */
+[data-contrast="high"] {
+  --bg: #FFFFFF; --surface: #FFFFFF; --surface-2: #FFFFFF; --surface-3: #F0F0F0;
+  --border: #000000; --border-strong: #000000;
+  --ink: #000000; --text: #000000; --muted: #1c1c1c; --faint: #333333;
+  --primary: #0033CC; --primary-soft: #E4EAFF;
+  --saffron: #8A4200; --saffron-soft: #FFF2E2; --green: #006B33; --green-soft: #E1F5E9;
+  --red: #B21B0F; --red-soft: #FCE3E1; --violet: #4B2FB0; --violet-soft: #EBE6FB;
+  --shadow-sm: none; --shadow: none; --shadow-lg: 0 0 0 1px #000;
+}
+[data-contrast="high"].dark, [data-contrast="high"][data-theme="dark"] {
+  --bg: #000000; --surface: #000000; --surface-2: #0a0a0a; --surface-3: #141414;
+  --border: #FFFFFF; --border-strong: #FFFFFF;
+  --ink: #FFFFFF; --text: #FFFFFF; --muted: #EAEAEA; --faint: #CFCFCF;
+  --primary: #8FB2FF; --primary-soft: #101d33;
+  --saffron: #FFC073; --green: #5EE29A; --red: #FF9B92; --violet: #C3ABFF;
+}
+
+/* Dark mode adjustments */
+/* App toggles the `.dark` class on <html> (Tailwind class strategy); also
+   support the `[data-theme="dark"]` attribute for parity with the reference. */
+[data-theme="dark"], .dark {
+  --bg: #0A1421;
+  --surface: #10202F;
+  --surface-2: #152A3C;
+  --surface-3: #193249;
+  --border: #20405B;
+  --border-strong: #2E5273;
+  --rail: #06121E;
+  --rail-2: #040D17;
+  --rail-line: #16304A;
+  --rail-text: #AEC1D8;
+  --rail-text-dim: #6B8199;
+
+  --ink: #EDF3F9;
+  --text: #DBE6F0;
+  --muted: #9DB0C4;
+  --faint: #7388A0;
+
+  --primary: #6E9BFF;
+  --primary-600: #5C8BF5;
+  --primary-soft: #182B4C;
+
+  --saffron: #F0A24B;
+  --saffron-soft: #33240F;
+  --green: #48C98A;
+  --green-soft: #0F2C1D;
+  --red: #F08B82;
+  --red-soft: #33181A;
+  --violet: #A78BFA;
+  --violet-soft: #231C3C;
+}

@@ -1,0 +1,240 @@
+-- =====================================================
+-- 1. Compilation Table
+-- =====================================================
+CREATE TABLE compilation_table (
+    id SERIAL PRIMARY KEY,
+
+    compiler_id INT NOT NULL,
+    compiler_name VARCHAR(100) NOT NULL,
+    compiled_by VARCHAR(100) NOT NULL,
+
+    month VARCHAR(20) NOT NULL,
+    year INT NOT NULL,
+    compile_type VARCHAR(20) NOT NULL,
+    iteration VARCHAR(50) NOT NULL,
+
+    status VARCHAR(20)
+        CHECK (status IN ('SUCCESS', 'FAILED')),
+
+    compiled_at TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- =====================================================
+-- 2. Common updated_at Trigger Function
+-- =====================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- 3. Compilation updated_at Trigger
+-- =====================================================
+CREATE TRIGGER trg_update_compilation_updated_at
+BEFORE UPDATE ON compilation_table
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- 4. Approver Request Table
+-- =====================================================
+CREATE TABLE approver_request_table (
+    id SERIAL PRIMARY KEY,
+
+    compilation_id INT UNIQUE
+        REFERENCES compilation_table(id)
+        ON DELETE CASCADE,
+
+    compiler_name VARCHAR(100) NOT NULL,
+    compiled_by VARCHAR(100) NOT NULL,
+    compiled_at TIMESTAMP NOT NULL,
+
+    month VARCHAR(20),
+    year INT,
+    compile_type VARCHAR(20),
+    iteration VARCHAR(50) NOT NULL,
+
+    filter_snapshot JSONB,
+
+    approval_status VARCHAR(20) DEFAULT 'PENDING'
+        CHECK (approval_status IN ('PENDING','APPROVED','REJECTED')),
+
+    approver_id INT,
+    approver_comment TEXT,
+    approved_at TIMESTAMP,
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- =====================================================
+-- 5. Approver Request Trigger
+-- =====================================================
+CREATE TRIGGER trg_update_approver_request_updated_at
+BEFORE UPDATE ON approver_request_table
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- 6. Approver Request Indexes
+-- =====================================================
+CREATE INDEX idx_approver_request_status
+ON approver_request_table (approval_status);
+
+CREATE INDEX idx_approver_request_compilation
+ON approver_request_table (compilation_id);
+
+CREATE INDEX idx_compiler_name
+ON approver_request_table (compiler_name);
+
+-- =====================================================
+-- 7. Approval History Table
+-- =====================================================
+CREATE TABLE approval_history_table (
+    id SERIAL PRIMARY KEY,
+
+    approver_request_id INT
+        REFERENCES approver_request_table(id)
+        ON DELETE CASCADE,
+
+    iteration VARCHAR(50) NOT NULL,
+
+    action VARCHAR(20)
+        CHECK (action IN ('APPROVED','REJECTED')),
+
+    comment TEXT,
+    action_by INT,
+    action_at TIMESTAMP DEFAULT NOW(),
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- =====================================================
+-- 8. Approval History Trigger
+-- =====================================================
+CREATE TRIGGER trg_update_approval_history_updated_at
+BEFORE UPDATE ON approval_history_table
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- 9. Approval History Indexes
+-- =====================================================
+CREATE INDEX idx_approval_history_request
+ON approval_history_table (approver_request_id);
+
+CREATE INDEX idx_approval_history_iteration
+ON approval_history_table (iteration);
+
+-- =====================================================
+-- 10. Auto-create Approval Request + History
+-- =====================================================
+CREATE OR REPLACE FUNCTION create_approval_request_and_history()
+RETURNS TRIGGER AS $$
+DECLARE
+    approver_request_id INT;
+BEGIN
+    INSERT INTO approver_request_table (
+        compilation_id,
+        compiler_name,
+        compiled_by,
+        compiled_at,
+        month,
+        year,
+        compile_type,
+        iteration,
+        filter_snapshot,
+        approval_status,
+        created_at,
+        updated_at
+    )
+    VALUES (
+        NEW.id,
+        NEW.compiler_name,
+        NEW.compiled_by,
+        NEW.compiled_at,
+        NEW.month,
+        NEW.year,
+        NEW.compile_type,
+        NEW.iteration,
+        '{}'::jsonb,
+        'PENDING',
+        NOW(),
+        NOW()
+    )
+    RETURNING id INTO approver_request_id;
+
+    INSERT INTO approval_history_table (
+        approver_request_id,
+        iteration,
+        action,
+        comment,
+        action_by,
+        action_at,
+        created_at,
+        updated_at
+    )
+    VALUES (
+        approver_request_id,
+        NEW.iteration,
+        'APPROVED',
+        'System generated approval request',
+        NULL,
+        NOW(),
+        NOW(),
+        NOW()
+    );
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- 11. Trigger: Create Approval on Compilation Insert
+-- =====================================================
+CREATE TRIGGER trg_create_approval_on_compilation
+AFTER INSERT ON compilation_table
+FOR EACH ROW
+EXECUTE FUNCTION create_approval_request_and_history();
+
+-- =====================================================
+-- 12. Compiled Data Table
+-- =====================================================
+CREATE TABLE compiled_data_table (
+    id SERIAL PRIMARY KEY,
+
+    compilation_id INT NOT NULL
+        REFERENCES compilation_table(id)
+        ON DELETE CASCADE,
+
+    iteration VARCHAR(50) NOT NULL,
+
+    data JSONB NOT NULL,
+
+    row_count INT NOT NULL,
+    column_list TEXT[] NOT NULL,
+    data_hash VARCHAR(64) NOT NULL,
+
+    status VARCHAR(20) DEFAULT 'DRAFT'
+        CHECK (status IN ('DRAFT','PUBLISHED','ARCHIVED')),
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- =====================================================
+-- 13. Compiled Data Trigger
+-- =====================================================
+CREATE TRIGGER trg_update_compiled_data_updated_at
+BEFORE UPDATE ON compiled_data_table
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+

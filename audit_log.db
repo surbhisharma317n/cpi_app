@@ -1,0 +1,126 @@
+CREATE TABLE system_event_log (
+    id BIGSERIAL PRIMARY KEY,
+
+    -- Event classification
+    event_type VARCHAR(50) NOT NULL,     -- DB_CHANGE / BUSINESS / AUTH / RBAC / SYSTEM / ERROR
+    event_name VARCHAR(100) NOT NULL,    -- INSERT / UPDATE / DELETE / APPROVE / LOGIN / EXPORT
+
+    -- Entity context
+    entity_name VARCHAR(100),
+    entity_id INT,
+
+    -- Actor context (RBAC aware)
+    actor_id INT,
+    actor_name VARCHAR(100),
+    actor_role VARCHAR(50),
+
+    -- Source context
+    source VARCHAR(50),                  -- API / UI / WORKER / CRON / DATABASE
+    ip_address INET,
+    user_agent TEXT,
+
+    -- Payload
+    metadata JSONB,
+
+    -- Result
+    success BOOLEAN DEFAULT TRUE,
+    error_message TEXT,
+
+    -- Timestamp
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+CREATE OR REPLACE FUNCTION system_db_event_trigger()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_actor_id INT;
+    v_actor_role TEXT;
+BEGIN
+    v_actor_id := current_setting('app.current_user_id', true)::INT;
+    v_actor_role := current_setting('app.current_user_role', true);
+
+    INSERT INTO system_event_log (
+        event_type,
+        event_name,
+        entity_name,
+        entity_id,
+        actor_id,
+        actor_role,
+        source,
+        metadata,
+        created_at
+    )
+    VALUES (
+        'DB_CHANGE',
+        TG_OP,
+        TG_TABLE_NAME,
+        COALESCE(NEW.id, OLD.id),
+        v_actor_id,
+        v_actor_role,
+        'DATABASE',
+        jsonb_build_object(
+            'old', to_jsonb(OLD),
+            'new', to_jsonb(NEW)
+        ),
+        NOW()
+    );
+
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER trg_audit_compilation
+AFTER INSERT OR UPDATE OR DELETE ON compilation_table
+FOR EACH ROW EXECUTE FUNCTION system_db_event_trigger();
+
+CREATE TRIGGER trg_audit_approver_request
+AFTER INSERT OR UPDATE OR DELETE ON approver_request_table
+FOR EACH ROW EXECUTE FUNCTION system_db_event_trigger();
+
+CREATE TRIGGER trg_audit_approval_history
+AFTER INSERT OR UPDATE OR DELETE ON approval_history_table
+FOR EACH ROW EXECUTE FUNCTION system_db_event_trigger();
+
+CREATE TRIGGER trg_audit_compiled_data
+AFTER INSERT OR UPDATE OR DELETE ON compiled_data_table
+FOR EACH ROW EXECUTE FUNCTION system_db_event_trigger();
+
+
+
+
+CREATE INDEX idx_event_type
+ON system_event_log (event_type);
+
+CREATE INDEX idx_event_name
+ON system_event_log (event_name);
+
+CREATE INDEX idx_event_entity
+ON system_event_log (entity_name, entity_id);
+
+CREATE INDEX idx_event_actor
+ON system_event_log (actor_id);
+
+CREATE INDEX idx_event_created_at
+ON system_event_log (created_at);
+
+
+
+REVOKE UPDATE, DELETE ON system_event_log FROM PUBLIC;
+
+CREATE RULE prevent_system_event_delete
+AS ON DELETE TO system_event_log DO INSTEAD NOTHING;
+
+
+
+
+
+6. Application Integration (Django / API)
+
+Set once per request (mandatory for actor tracking):
+
+cursor.execute("SET LOCAL app.current_user_id = %s", [request.user.id])
+cursor.execute("SET LOCAL app.current_user_role = %s", [request.user.role])

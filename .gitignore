@@ -42,3 +42,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Runtime/generated data — price data dumps, uploads, pip wheel cache.
+# Not source code; regenerated/uploaded at runtime, too large for git.
+backend/data/
+backend/media/
+backend/offline_packages/
+/data/

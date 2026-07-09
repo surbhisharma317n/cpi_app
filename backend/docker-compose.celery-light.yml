@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for data
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: dataprocessing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Celery broker
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Celery Worker
+  celery:
+    build: .
+    command: celery -A config worker --loglevel=info --concurrency=2 --max-tasks-per-child=50
+    volumes:
+      - ./media:/app/media
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres/dataprocessing
+      - REDIS_URL=redis://redis:6379/0
+      - DEBUG=False
+
+  # Django Application
+  django:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 2"
+    volumes:
+      - ./media:/app/media
+      - ./static:/app/static
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres/dataprocessing
+      - REDIS_URL=redis://redis:6379/0
+      - DEBUG=False
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-django-insecure-docker-key}
+
+volumes:
+  postgres_data:
+  redis_data:

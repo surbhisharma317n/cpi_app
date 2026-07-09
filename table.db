@@ -1,0 +1,320 @@
+CREATE TABLE rural_market_price (
+    id SERIAL PRIMARY KEY,
+
+    usertimestamp TIMESTAMP,
+    state_id INT,
+    sector_id INT,
+    nss_sector_code VARCHAR(10),
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_village_code VARCHAR(20),
+
+    old_pitem_code VARCHAR(50),
+    old_pitem_name TEXT,
+    unit VARCHAR(50),
+    quantity NUMERIC(12,2),
+
+    spcl_code VARCHAR(20),
+    item_price NUMERIC(14,2),
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_collection_week_no INT CHECK (price_collection_week_no BETWEEN 1 AND 5),
+
+    price_remarks TEXT,
+    market_id INT,
+
+    spcl_id INT,
+    pitem_id INT,
+    revised_item_price NUMERIC(14,2),
+
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_month_year VARCHAR(20),
+    price_data_status VARCHAR(50),
+
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+    iteration_id INT,
+
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE urban_market_price (
+    id SERIAL PRIMARY KEY,
+
+    usertimestamp TIMESTAMP,
+    state_id INT,
+    sector_id INT,
+    nss_sector_code VARCHAR(10),
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_town_code VARCHAR(10),
+    nss_market_code VARCHAR(10),
+
+    old_pitem_code VARCHAR(50),
+    old_pitem_name TEXT,
+    unit VARCHAR(50),
+    quantity NUMERIC(12,2),
+
+    spcl_code VARCHAR(20),
+    item_price NUMERIC(14,2),
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_collection_week_no INT CHECK (price_collection_week_no BETWEEN 1 AND 5),
+
+    price_remarks TEXT,
+    market_id INT,
+
+    spcl_id INT,
+    pitem_id INT,
+    revised_item_price NUMERIC(14,2),
+
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_month_year VARCHAR(20),
+    price_data_status VARCHAR(50),
+
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+    iteration_id INT,
+
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+       CREATE TABLE rural_hr_price (
+    id SERIAL PRIMARY KEY,
+
+    -- 1. Timestamp fields
+    usertimestamp TIMESTAMP,
+
+    -- 2. Geographic / NSS Codes
+    state_id INT,
+    nss_sector_code VARCHAR(10),
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_village_code VARCHAR(20),
+
+    -- 3. Dwelling information
+    dwelling_code VARCHAR(20),
+    dwelling_status_code VARCHAR(10),
+    dwelling_sr_no VARCHAR(20),
+    house_category VARCHAR(50),
+
+    -- 4. Old item reference (same placement as rural_market_price)
+    old_pitem_code VARCHAR(50),
+
+    -- 5. Rent Values (similar place as item_price fields)
+    total_rent_payable NUMERIC(14,2),
+    total_rent_six_month_ago NUMERIC(14,2),
+    revised_total_rent_payable NUMERIC(14,2),
+
+    -- 6. Price month/year fields
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_month_year VARCHAR(20),
+
+    -- 7. Price collection & remarks
+    price_remarks TEXT,
+    market_id INT,
+
+    -- 8. IDs related to processing
+    pitem_id INT,
+    iteration_id INT,
+
+    -- 9. Data imputation & status
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_data_status VARCHAR(50),
+
+    -- 10. Data update audit fields
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+
+    -- 11. Created/updated audit
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE urban_hr_price (
+    id SERIAL PRIMARY KEY,
+
+    -- 1. Timestamp
+    usertimestamp TIMESTAMP,
+
+    -- 2. Geographic / NSS Codes
+    state_id INT,
+    nss_sector_code VARCHAR(10),
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_town_code VARCHAR(20),
+    nss_market_code VARCHAR(20),
+
+    -- 3. Dwelling information
+    dwelling_code VARCHAR(20),
+    dwelling_status_code VARCHAR(10),
+    dwelling_sr_no VARCHAR(20),
+    house_category VARCHAR(50),
+
+    -- 4. Old item reference
+    old_pitem_code VARCHAR(50),
+
+    -- 5. Rent Values
+    total_rent_payable NUMERIC(14,2),
+    total_rent_six_month_ago NUMERIC(14,2),
+    revised_total_rent_payable NUMERIC(14,2),
+
+    -- 6. Price month/year
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_month_year VARCHAR(20),
+
+    -- 7. Price remarks
+    price_remarks TEXT,
+
+    -- 8. Market & Item reference
+    market_id INT,
+    pitem_id INT,
+    iteration_id INT,
+
+    -- 9. Price metadata
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_data_status VARCHAR(50),
+
+    -- 10. Data update (audit)
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+
+    -- 11. Record creation audit
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE urban_airfare_price (
+    id SERIAL PRIMARY KEY,
+
+    -- 1. Timestamp (consistent across all tables)
+    usertimestamp TIMESTAMP,
+
+    -- 2. Geographic / NSS Codes
+    state_id INT,
+    sector_id INT,
+    nss_sector_code VARCHAR(10),
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_town_code VARCHAR(20),
+    nss_market_code VARCHAR(20),
+
+    -- 3. Item / airfare route information
+    old_pitem_code VARCHAR(50),
+    route_details TEXT,
+    booking_platform VARCHAR(50),
+    booking_platform_name VARCHAR(100),
+    timeslot VARCHAR(50),
+    airlines VARCHAR(100),
+    price_date DATE,
+    journey_date DATE,
+    spcl_code VARCHAR(20),
+
+    -- 4. Price values
+    item_price NUMERIC(14,2),
+    revised_item_price NUMERIC(14,2),
+
+    -- 5. Month/year
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_month_year VARCHAR(20),
+
+    -- 6. Remarks
+    price_remarks TEXT,
+
+    -- 7. Market & item references
+    market_id INT,
+    spcl_id INT,
+    route_id INT,
+    pitem_id INT,
+    iteration_id INT,
+
+    -- 8. Imputation info
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_data_status VARCHAR(50),
+
+    -- 9. Data update audit
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+
+    -- 10. Creation audit
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE urban_market_online_price (
+    id SERIAL PRIMARY KEY,
+
+    -- 1. Timestamp (consistent with other tables)
+    usertimestamp TIMESTAMP,
+
+    -- 2. Geographic / NSS Codes
+    state_id INT,
+    sector_id INT,
+    nss_state_code VARCHAR(10),
+    nss_district_code VARCHAR(10),
+    nss_town_code VARCHAR(20),
+    nss_market_code VARCHAR(20),
+
+    -- 3. Old/new item information
+    old_pitem_code VARCHAR(50),
+    old_pitem_name TEXT,
+    unit VARCHAR(50),
+    quantity NUMERIC(12,2),
+    spcl_code VARCHAR(20),
+
+    -- 4. Price values
+    item_price NUMERIC(14,2),
+    revised_item_price NUMERIC(14,2),
+
+    -- 5. Price month and collection info
+    price_year INT,
+    price_month INT CHECK (price_month BETWEEN 1 AND 12),
+    price_collection_week_no INT CHECK (price_collection_week_no BETWEEN 1 AND 5),
+    price_month_year VARCHAR(20),
+
+    -- 6. Price remarks
+    price_remarks TEXT,
+
+    -- 7. Market and DB reference IDs
+    market_id INT,
+    spcl_id INT,
+    pitem_id INT,
+    iteration_id INT,
+
+    -- 8. Price metadata
+    price_imputed BOOLEAN DEFAULT FALSE,
+    price_data_status VARCHAR(50),
+
+    -- 9. Data updation audit fields
+    data_updation_uid VARCHAR(255),
+    data_updation_dtime TIMESTAMP,
+
+    -- 10. Record creation audit fields
+    created_by INT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+

@@ -1,0 +1,517 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Noto+Sans+Mono:wght@400;500;600;700&display=swap');
+@import './styles/design-tokens.css';
+@import './styles/shell.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+* {
+  transition: 
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-in-out forwards;
+}
+
+.animate-slide-out {
+  animation: slide-out 0.3s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  letter-spacing: -.005em;
+  -webkit-font-smoothing: antialiased;
+}
+.main_footer {
+    background-color: #0a266c;  
+    color: #fff !important;
+    font-size: 14px;
+    padding: 5px 15px 2px;
+    text-align: center;
+}
+
+.main_sidebar {
+    background-color: #0a266c;
+    color: #fff !important;
+    font-size: 14px;
+    padding: 5px 15px 2px;
+    text-align: center;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+.card {
+  padding: 2em;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;     
+  width: 100%;
+}
+.read-the-docs {
+  color: #888;
+  font-size: 0.875rem;
+  margin-top: 1rem;   
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .logo {
+    height: 4em;      
+    padding: 1em;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.875rem;
+  }
+  .card {
+    padding: 1.5em;
+  }
+  .read-the-docs {
+    font-size: 0.75rem;   
+    margin-top: 0.5rem;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  a {
+    color: #bb86fc;
+  }
+  .card {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  .read-the-docs {
+    color: #bbb;
+  }
+}
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  a {
+    color: #1d4ed8;
+  }
+  .card {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  .read-the-docs {
+    color: #888;
+  }
+} 
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+  .card {
+    width: 100%;
+    max-width: none;
+  }
+}
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.25rem;
+  }
+  p {
+    font-size: 0.875rem;
+  }
+  .logo {
+    height: 3em;
+    padding: 0.75em;
+  }
+  .card {
+    padding: 1rem;      
+    font-size: 0.875rem;
+  }
+  .read-the-docs {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+}
+@media (max-width: 360px) {
+  h1 {
+    font-size: 1.125rem;      
+  }
+  p {
+    font-size: 0.75rem;
+  }
+  .logo {
+    height: 2.5em;
+    padding: 0.5em;
+  }
+  .card {
+    padding: 0.75em;      
+
+    font-size: 0.75rem;
+  }
+  .read-the-docs {
+    font-size: 0.625rem;
+    margin-top: 0.125rem;
+  }
+}
+@media (max-width: 320px) {
+  h1 {    
+    font-size: 1rem;
+  }
+  p {
+    font-size: 0.75rem;
+  }
+  .logo {
+    height: 2em;
+    padding: 0.25em;
+  }
+  .card {
+    padding: 0.5em;
+    font-size: 0.75rem;
+  }
+  .read-the-docs {
+    font-size: 0.625rem;
+    margin-top: 0.125rem;   
+  }
+}
+@media (max-width: 280px) {
+  h1 {
+    font-size: 0.875rem;
+  }
+  p {   
+    font-size: 0.75rem;
+  } 
+  .logo {
+    height: 1.75em;
+    padding: 0.125em;
+  }
+  .card {
+    padding: 0.25em;
+    font-size: 0.75rem;
+  }
+  .read-the-docs {
+    font-size: 0.625rem;
+    margin-top: 0.125rem;
+  }
+}
+@media (max-width: 240px) {
+  h1 {
+    font-size: 0.75rem;
+  }
+  p {
+    font-size: 0.625rem;
+  }
+  .logo {
+    height: 1.5em;
+    padding: 0.125em;
+  }
+  .card {
+    padding: 0.125em;
+    font-size: 0.625rem;
+  }
+  .read-the-docs {
+    font-size: 0.5rem;
+    margin-top: 0.0625rem;   
+  }
+}
+@media (max-width: 200px) {
+  h1 {
+    font-size: 0.625rem;
+  }     
+  p {
+    font-size: 0.5rem;
+  }
+  .logo {
+    height: 1.25em;
+    padding: 0.0625em;
+  }
+  .card {
+    padding: 0.0625em;
+    font-size: 0.5rem;
+  }
+  .read-the-docs {
+    font-size: 0.375rem;
+    margin-top: 0.03125rem;
+  }
+}
+@media (max-width: 160px) {
+  h1 {
+    font-size: 0.5rem;
+  }
+  p {
+    font-size: 0.375rem;
+
+
+  } .logo {
+    height: 1em;    
+    padding: 0.03125em;
+  }
+  .card {
+    padding: 0.03125em;
+    font-size: 0.375rem;
+  }
+  .read-the-docs {
+    font-size: 0.25rem;
+    margin-top: 0.015625rem;
+  }
+}
+@media (max-width: 120px) {
+  h1 {
+    font-size: 0.375rem;
+  }
+  p { 
+    font-size: 0.25rem;
+  }
+  .logo {
+    height: 0.75em;
+    padding: 0.015625em;
+  }
+  .card {
+    padding: 0.015625em;
+    font-size: 0.25rem;
+  }
+  .read-the-docs {
+    font-size: 0.125rem;
+    margin-top: 0.0078125rem;
+  }
+}
+@media (max-width: 80px) {
+  h1 {
+    font-size: 0.25rem;   
+  }   
+  p {
+    font-size: 0.125rem;
+  }
+  .logo {
+    height: 0.5em;
+    padding: 0.0078125em;   
+  }
+  .card {
+    padding: 0.0078125em;
+    font-size: 0.125rem;
+  }
+  .read-the-docs {
+    font-size: 0.0625rem;
+    margin-top: 0.00390625rem;
+
+  }
+}     
+@media (max-width: 40px) {
+  h1 {
+    font-size: 0.125rem;
+  }
+  p {
+    font-size: 0.0625rem;
+  }
+  .logo {
+    height: 0.25em;
+    padding: 0.00390625em;
+  }
+  .card {
+    padding: 0.00390625em;
+    font-size: 0.0625rem;
+  }
+  .read-the-docs {
+    font-size: 0.03125rem;
+    margin-top: 0.001953125rem;
+  }
+}
+@media (max-width: 20px) {
+  h1 {
+    font-size: 0.0625rem;
+  }   
+
+  p {
+    font-size: 0.03125rem;
+  } 
+
+  .logo {
+    height: 0.125em;
+    padding: 0.001953125em;
+  }       
+
+  .card {
+    padding: 0.001953125em;
+    font-size: 0.03125rem;
+  }
+  .read-the-docs {  
+
+
+    font-size: 0.015625rem;
+    margin-top: 0.0009765625rem;
+  }         
+}
+@media (max-width: 10px) {
+  h1 {
+    font-size: 0.03125rem;
+  }
+  p {
+    font-size: 0.015625rem;
+  }
+  .logo {
+
+    height: 0.0625em;
+    padding: 0.0009765625em;
+  }     
+  .card {
+    padding: 0.0009765625em;
+    font-size: 0.015625rem;
+  }
+  .read-the-docs {
+    font-size: 0.0078125rem;
+    margin-top: 0.00048828125rem;
+  }
+}
+@media (max-width: 5px) {
+  h1 {
+    font-size: 0.015625rem;
+  }
+  p {
+    font-size: 0.0078125rem;
+  }
+  .logo {
+    height: 0.03125em;
+    padding: 0.00048828125em;
+  }
+  .card {
+    padding: 0.00048828125em;
+    font-size: 0.0078125rem;      
+  }
+  .read-the-docs {
+    font-size: 0.00390625rem;
+    margin-top: 0.000244140625rem;
+  }
+}
+@media (max-width: 2px) {
+  h1 {
+    font-size: 0.0078125rem;  
+  }
+  p {
+    font-size: 0.00390625rem;
+  }
+  .logo {
+    height: 0.015625em;
+    padding: 0.000244140625em;
+  } 
+  .card {
+    padding: 0.000244140625em;
+    font-size: 0.00390625rem;
+  }
+  .read-the-docs {
+    font-size: 0.001953125rem;
+    margin-top: 0.0001220703125rem; 
+  }
+}
+@media (max-width: 1px) {
+  h1 {
+    font-size: 0.00390625rem;
+  }
+  p {
+    font-size: 0.001953125rem;
+  }
+  .logo {
+    height: 0.0078125em;
+    padding: 0.0001220703125em;
+  }
+  .card {
+    padding: 0.0001220703125em;
+    font-size: 0.001953125rem;
+  }
+  .read-the-docs {
+    font-size: 0.0009765625rem;
+    margin-top: 0.00006103515625rem;
+  }
+}

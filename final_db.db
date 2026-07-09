@@ -1,0 +1,270 @@
+['rural_elect_prices',
+'rural_hr_prices',
+'rural_mkt_prices',
+'urban_airfare_prices',
+'urban_elect_prices',
+'urban_hr_prices',
+'urban_mkt_online_prices',
+'urban_mkt_prices',
+'urban_pds_prices',
+'coicop_mapping',
+'vw_market_master',
+'all_excl_pds_pidx',
+'elect_discom_price_index',
+'hr_category_index',
+'all_combined_pds_indexes',
+'pds_weighted_item_expenditure_shares',
+'priced_item_expenditure_shares',
+'priced_item_weights',
+'weighted_item_expenditure_shares',
+'discom_weights',
+'hr_category_weights',
+'hr_own_rent_exp_share',
+'pds_omkt_item_dist_share',
+'pds_pitem_dist_shares',
+'pds_witem_c_value']
+
+
+CREATE TABLE mapping.coicop_mapping (
+    pitem_code        VARCHAR(50),
+    witem_code        VARCHAR(50),
+    gs_code           VARCHAR(10),
+    subclass_code     VARCHAR(20),
+    class_code        VARCHAR(20),
+    group_code        VARCHAR(20),
+    division_code     VARCHAR(10),
+    pitem_name        VARCHAR(255),
+    witem_name        VARCHAR(255),
+    gs_name           VARCHAR(255),
+    subclass_name     VARCHAR(255),
+    class_name        VARCHAR(255),
+    group_name        VARCHAR(255),
+    division_name     VARCHAR(255),
+    pitem_id          INTEGER,
+    witem_id          INTEGER,
+    subclass_id       INTEGER,
+    class_id          INTEGER,
+    group_id          INTEGER,
+    division_id       INTEGER,
+    item_type_id      INTEGER,
+    item_type_name    VARCHAR(100),
+    old_pitem_code    VARCHAR(50),
+    old_pitem_name    VARCHAR(255),
+    created_at        TIMESTAMP DEFAULT NOW(),
+    updated_at        TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
+
+
+
+CREATE TABLE mapping.vw_market_master (
+    market_id              INTEGER,
+    nss_sector_code        VARCHAR(2),
+    nss_market_code        VARCHAR(6),
+    nss_village_code       VARCHAR(6),
+    nss_town_code          VARCHAR(6),
+    nss_district_code      VARCHAR(2),
+    nss_state_code         VARCHAR(2),
+    lgd_village_code       VARCHAR(6),
+    lgd_subdistrict_code   VARCHAR(3),
+    lgd_district_code      VARCHAR(2),
+    lgd_town_code          VARCHAR(3),
+    lgd_state_code         VARCHAR(2),
+    sector_name            VARCHAR(255),
+    nss_market_name        TEXT,
+    lgd_village_name       TEXT,
+    lgd_subdistrict_name   TEXT,
+    lgd_district_name      TEXT,
+    lgd_town_name          TEXT,
+    lgd_town_type_name     TEXT,
+    lgd_state_name         TEXT,
+    jurisdiction_type      VARCHAR(255),
+    sector_id              INTEGER,
+    state_id               INTEGER,
+    district_id            INTEGER,
+    village_id             INTEGER,
+    town_id                INTEGER,
+    zone_code              VARCHAR(1),
+    ro_code                VARCHAR(3),
+    sro_code               VARCHAR(4),
+    ro_name                TEXT,
+    sro_name               TEXT,
+    created_at             TIMESTAMP DEFAULT NOW(),
+    updated_at             TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
+
+CREATE TABLE price_idx.all_excl_pds_pidx (
+    nss_state_code      VARCHAR(2),
+    nss_sector_code     VARCHAR(2),
+    pitem_code          VARCHAR(50),
+    imputed             INTEGER,
+    price_index         NUMERIC(10,2),
+    price_data_status   VARCHAR(50),
+    data_updation_uid   INTEGER,
+    iteration_id        INTEGER,
+    price_month_year    TIMESTAMP,
+    state_id            INTEGER,
+    sector_id           INTEGER,
+    pitem_id            INTEGER,
+    created_at          TIMESTAMP DEFAULT NOW(),
+    updated_at          TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE price_idx.elect_discom_price_index (
+    nss_state_code        VARCHAR(10)    NOT NULL,
+    nss_sector_code       VARCHAR(10)    NOT NULL,
+    nss_discom_code       VARCHAR(20)    NOT NULL,
+    state_id              INT            NOT NULL,
+    sector_id             INT            NOT NULL,
+    discom_price_index    NUMERIC(10,2)  NOT NULL,
+    price_month_year      TIMESTAMP      NOT NULL,
+    price_data_status     VARCHAR(50),
+    data_updation_uid     INT,
+    iteration_id          INT,
+    created_at            TIMESTAMP DEFAULT NOW(),
+    updated_at            TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE weights.house_rent_level_index (
+    state_id            INT             NOT NULL,
+    sector_id           INT             NOT NULL,
+    imputed             INT,                     -- 0/1 flag (as per sample)
+    level               VARCHAR(50)     NOT NULL,
+    level_id            INT             NOT NULL,
+    index               NUMERIC(10,2)   NOT NULL,   -- price index value
+    price_data_status   VARCHAR(50),
+    data_updation_uid   INT,
+    iteration_id        INT,
+    price_month_year    TIMESTAMP       NOT NULL,
+    created_at          TIMESTAMP DEFAULT NOW(),
+    updated_at          TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE weights.discom_weights (
+    nss_state_code      VARCHAR(2)      NOT NULL,
+    nss_sector_code     VARCHAR(2)      NOT NULL,
+    nss_discom_code     VARCHAR(10)     NOT NULL,
+    nss_discom_name     VARCHAR(255),
+    units_slab          VARCHAR(50),       -- e.g., '0-100'
+    hh_count            INT,               -- household count
+    state_id            INT               NOT NULL,
+    sector_id           INT               NOT NULL,
+    created_at          TIMESTAMP DEFAULT NOW(),
+    updated_at          TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE weights.hr_category_weights (
+    state_id            INT             NOT NULL,
+    sector_id           INT             NOT NULL,
+    nss_state_code      VARCHAR(2)      NOT NULL,
+    nss_sector_code     VARCHAR(2)      NOT NULL,
+    state_name          VARCHAR(255),
+    sector_name         VARCHAR(255),
+    house_ownership     VARCHAR(100),      -- e.g., 'Owned'
+    house_category      VARCHAR(100),      -- e.g., 'Group 1'
+    category_weight     NUMERIC(15,2),     -- large weights allowed
+    created_at          TIMESTAMP DEFAULT NOW(),
+    updated_at          TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE weights.hr_own_rent_exp_share (
+    state_id            INT             NOT NULL,
+    sector_id           INT             NOT NULL,
+    nss_state_code      VARCHAR(2)      NOT NULL,
+    nss_sector_code     VARCHAR(2)      NOT NULL,
+    nss_state_name      VARCHAR(255),
+    nss_sector_name     VARCHAR(255),
+    house_ownership     VARCHAR(100),       -- e.g., Owned / Rented
+    exp_weight          NUMERIC(20,2),      -- large expenditure weight
+    created_at          TIMESTAMP DEFAULT NOW(),
+    updated_at          TIMESTAMP DEFAULT NOW()
+);
+
+
+
+CREATE TABLE weights.pds_witem_c_value (
+    nss_state_code VARCHAR(2) NOT NULL,
+    nss_sector_code VARCHAR(2) NOT NULL,
+    weighted_item VARCHAR(50) NOT NULL,
+    c_value NUMERIC(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE weights.pds_omkt_item_dist_share (
+    nss_state_code VARCHAR(2) NOT NULL,
+    nss_sector_code VARCHAR(2) NOT NULL,
+    weighted_item VARCHAR(50) NOT NULL,
+    item_type VARCHAR(20) NOT NULL,
+    distribution_share NUMERIC(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE weights.pds_pitem_weights (
+    nss_state_code VARCHAR(2) NOT NULL,
+    nss_sector_code VARCHAR(2) NOT NULL,
+    coicop_pitem_code VARCHAR(50) NOT NULL,
+    priced_item_name VARCHAR(100) NOT NULL,
+    weight NUMERIC(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE weights.priced_item_expenditure_shares (
+    nss_state_code VARCHAR(2) NOT NULL,
+    nss_sector_code VARCHAR(2) NOT NULL,
+    pitem_code VARCHAR(50) NOT NULL,
+    exp_share NUMERIC(12,4) NOT NULL,
+    state_id INT NOT NULL,
+    sector_id INT NOT NULL,
+    pitem_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE weights.priced_item_weights (
+    pitem_id INT NOT NULL,
+    pitem_code VARCHAR(50) NOT NULL,
+    witem_code VARCHAR(50) NOT NULL,
+    pitem_wt NUMERIC(12,4) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE weights.weighted_item_expenditure_shares (
+    nss_state_code VARCHAR(2) NOT NULL,
+    nss_sector_code VARCHAR(2) NOT NULL,
+    witem_code VARCHAR(50) NOT NULL,
+    exp_share NUMERIC(12,4) NOT NULL,
+    state_id INT NOT NULL,
+    sector_id INT NOT NULL,
+    witem_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
+

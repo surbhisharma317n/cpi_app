@@ -1,0 +1,690 @@
+-- CREATE TABLE weights.pds_witem_c_value (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     witem_code VARCHAR(50),
+
+--     c_value DOUBLE PRECISION,
+
+--     state_id INT,
+--     sector_id INT,
+--     witem_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+-- CREATE TABLE weights.pds_pitem_dist_shares (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     pitem_code VARCHAR(50),
+--     witem_code VARCHAR(50),
+
+--     dist_share DOUBLE PRECISION,
+
+--     state_id INT,
+--     sector_id INT,
+--     pitem_id INT,
+--     witem_id INT,
+--     item_type_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE weights.pds_omkt_item_dist_share (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     weighted_item VARCHAR(50),
+--     item_type VARCHAR(50),
+--     distribution_share DOUBLE PRECISION,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE weights.hr_own_rent_exp_share (
+--     state_id INT,
+--     sector_id INT,
+
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     nss_state_name VARCHAR(100),
+--     nss_sector_name VARCHAR(100),
+
+--     house_ownership VARCHAR(50),
+--     exp_weight DOUBLE PRECISION,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+
+-- CREATE TABLE weights.hr_category_weights (
+--     state_id INT,
+--     sector_id INT,
+
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     state_name VARCHAR(100),
+--     sector_name VARCHAR(100),
+
+--     house_ownership VARCHAR(50),
+--     house_category VARCHAR(50),
+
+--     category_weight INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE weights.discom_weights (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     nss_discom_code VARCHAR(20),
+--     nss_discom_name VARCHAR(100),
+--     units_slab VARCHAR(50),
+
+--     hh_count INT,
+--     state_id INT,
+--     sector_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE weights.weighted_item_expenditure_shares (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     witem_code VARCHAR(50),
+
+--     exp_share INT,
+--     state_id INT,
+--     sector_id INT,
+--     witem_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE weights.priced_item_weights (
+--     pitem_id INT,
+--     pitem_code VARCHAR(50),
+--     witem_code VARCHAR(50),
+--     pitem_wt DOUBLE PRECISION,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE weights.priced_item_expenditure_shares (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     pitem_code VARCHAR(50),
+
+--     exp_share DOUBLE PRECISION,
+--     state_id INT,
+--     sector_id INT,
+--     pitem_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE weights.pds_weighted_item_expenditure_shares (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     witem_code VARCHAR(50),
+
+--     exp_share INT,
+--     state_id INT,
+--     sector_id INT,
+--     witem_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE release_output.all_combined_pds_indexes (
+--     state_id INT,
+--     sector_id INT,
+--     imputed INT,
+--     level VARCHAR(50),
+--     level_id DOUBLE PRECISION,
+--     index_value DOUBLE PRECISION,
+--     price_data_status VARCHAR(50),
+--     data_updation_uid INT,
+--     iteration_id INT,
+--     price_month_year TIMESTAMP,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE release_output.hr_category_index (
+--     price_month_year TIMESTAMP,
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     house_category VARCHAR(50),
+--     imputed INT,
+--     cat_index DOUBLE PRECISION,
+--     price_data_status VARCHAR(50),
+--     state_id INT,
+--     data_updation_uid INT,
+--     data_updation_dtime TIMESTAMP,
+--     iteration_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE release_output.elect_discom_price_index (
+--     nss_state_code VARCHAR(10),
+--     nss_sector_code VARCHAR(10),
+--     nss_discom_code VARCHAR(20),
+--     state_id INT,
+--     sector_id INT,
+--     discom_price_index DOUBLE PRECISION,
+--     price_month_year TIMESTAMP,
+--     price_data_status VARCHAR(50),
+--     data_updation_uid INT,
+--     iteration_id INT,
+
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE release_output.all_excl_pds_pidx (
+--     nss_state_code        VARCHAR(10),
+--     nss_sector_code       VARCHAR(10),
+--     pitem_code            VARCHAR(50),
+--     imputed               INT,
+--     price_index           INT,
+--     price_data_status     VARCHAR(50),
+--     data_updation_uid     INT,
+--     iteration_id          INT,
+--     price_month_year      TIMESTAMP,
+--     state_id              INT,
+--     sector_id             INT,
+--     pitem_id              INT,
+
+--     created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE mapping.vw_market_master (
+--     market_id              INT,
+--     nss_sector_code        VARCHAR(10),
+--     nss_market_code        VARCHAR(20),
+--     nss_village_code       VARCHAR(20),
+--     nss_town_code          VARCHAR(20),
+--     nss_district_code      VARCHAR(20),
+--     nss_state_code         VARCHAR(10),
+
+--     lgd_village_code       INT,
+--     lgd_subdistrict_code   INT,
+--     lgd_district_code      INT,
+--     lgd_town_code          INT,
+--     lgd_state_code         INT,
+
+--     sector_name            VARCHAR(100),
+--     nss_market_name        VARCHAR(200),
+--     lgd_village_name       VARCHAR(200),
+--     lgd_subdistrict_name   VARCHAR(200),
+--     lgd_district_name      VARCHAR(200),
+--     lgd_town_name          VARCHAR(200),
+--     lgd_town_type_name     VARCHAR(100),
+--     lgd_state_name         VARCHAR(200),
+
+--     jurisdiction_type      VARCHAR(50),
+
+--     sector_id              INT,
+--     state_id               INT,
+--     district_id            INT,
+--     village_id             INT,
+--     town_id                INT,
+
+--     zone_code              VARCHAR(20),
+--     ro_code                VARCHAR(20),
+--     sro_code               VARCHAR(20),
+--     ro_name                VARCHAR(200),
+--     sro_name               VARCHAR(200),
+
+--     created_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE mapping.coicop_mapping (
+--     pitem_code        VARCHAR(50),
+--     witem_code        VARCHAR(50),
+--     gs_code           VARCHAR(50),
+--     subclass_code     VARCHAR(50),
+--     class_code        VARCHAR(50),
+--     group_code        VARCHAR(50),
+--     division_code     VARCHAR(50),
+
+--     pitem_name        VARCHAR(255),
+--     witem_name        VARCHAR(255),
+--     gs_name           VARCHAR(255),
+--     subclass_name     VARCHAR(255),
+--     class_name        VARCHAR(255),
+--     group_name        VARCHAR(255),
+--     division_name     VARCHAR(255),
+
+--     pitem_id          INT,
+--     witem_id          INT,
+--     subclass_id       INT,
+--     class_id          INT,
+--     group_id          INT,
+--     division_id       INT,
+--     item_type_id      INT,
+
+--     item_type_name    VARCHAR(255),
+--     old_pitem_code    VARCHAR(50),
+--     old_pitem_name    VARCHAR(255),
+
+--     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+--   Price Input table
+
+-- CREATE TABLE price_item.rural_elect_prices (
+--     nss_sector_code             VARCHAR(10),
+--     nss_state_code              VARCHAR(10),
+--     nss_district_code           VARCHAR(10),
+--     nss_village_code            VARCHAR(20),
+
+--     dwelling_code               VARCHAR(50),
+--     dwelling_status_code        INT,
+--     dwelling_sr_no              VARCHAR(50),
+
+--     house_category              VARCHAR(50),
+
+--     total_rent_payable          DOUBLE PRECISION,
+--     total_rent_six_month_ago    DOUBLE PRECISION,
+--     price_remarks               VARCHAR(255),
+
+--     market_id                   BIGINT,
+--     state_id                    BIGINT,
+
+--     pitem_id                    INT,
+--     pitem_code                  VARCHAR(50),
+
+--     revised_total_rent_payable  DOUBLE PRECISION,
+--     price_imputed               INT,
+
+--     price_month_year            TIMESTAMP,
+--     price_data_status           VARCHAR(50),
+--     price_month                 VARCHAR(20),
+--     price_year                  VARCHAR(20),
+
+--     data_updation_uid           BIGINT,
+--     data_updation_dtime         TIMESTAMP,
+--     iteration_id                BIGINT,
+
+--     -- Auto timestamps
+--     created_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                 
+-- );
+
+
+-- CREATE TABLE price_item.urban_elect_prices (
+   
+
+--     nss_sector_code             VARCHAR(10),
+--     nss_state_code              VARCHAR(10),
+--     nss_district_code           VARCHAR(10),
+--     nss_town_code               VARCHAR(10),
+--     nss_market_code             VARCHAR(20),
+
+--     dwelling_code               VARCHAR(50),
+--     dwelling_status_code        INT,
+--     dwelling_sr_no              VARCHAR(50),
+
+--     house_category              VARCHAR(50),
+
+--     total_rent_payable          DOUBLE PRECISION,
+--     total_rent_six_month_ago    DOUBLE PRECISION,
+--     price_remarks               VARCHAR(255),
+
+--     market_id                   BIGINT,
+--     state_id                    BIGINT,
+
+--     pitem_id                    INT,
+--     pitem_code                  VARCHAR(50),
+
+--     revised_total_rent_payable  DOUBLE PRECISION,
+--     price_imputed               INT,
+
+--     price_month_year            TIMESTAMP,
+--     price_data_status           VARCHAR(50),
+-- 	price_month                 VARCHAR(20),
+--     price_year                  VARCHAR(20),
+
+--     data_updation_uid           BIGINT,
+--     data_updation_dtime         TIMESTAMP,
+--     iteration_id                BIGINT,
+
+--     -- Auto timestamps
+--     created_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                 
+-- );
+
+-- CREATE TABLE price_item.rural_hr_prices (
+--     nss_sector_code             VARCHAR(10),
+--     nss_state_code              VARCHAR(10),
+--     nss_district_code           VARCHAR(10),
+--     nss_village_code            VARCHAR(20),
+
+--     dwelling_code               VARCHAR(50),
+--     dwelling_status_code        INT,
+--     dwelling_sr_no              VARCHAR(50),
+
+--     house_category              VARCHAR(50),
+
+--     total_rent_payable          DOUBLE PRECISION,
+--     total_rent_six_month_ago    DOUBLE PRECISION,
+--     price_remarks               VARCHAR(255),
+
+--     market_id                   BIGINT,
+--     state_id                    BIGINT,
+
+--     pitem_id                    INT,
+--     pitem_code                  VARCHAR(50),
+
+--     revised_total_rent_payable  DOUBLE PRECISION,
+--     price_imputed               INT,
+
+--     price_month_year            TIMESTAMP,
+--     price_data_status           VARCHAR(50),
+
+--     price_month                 VARCHAR(20),
+--     price_year                  VARCHAR(20),
+
+--     data_updation_uid           BIGINT,
+--     data_updation_dtime         TIMESTAMP,
+--     iteration_id                BIGINT,
+
+--     created_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                              
+-- );
+
+
+
+-- CREATE TABLE price_item.urban_hr_prices (
+--     nss_sector_code             VARCHAR(10),
+--     nss_state_code              VARCHAR(10),
+--     nss_district_code           VARCHAR(10),
+--     nss_town_code               VARCHAR(10),
+--     nss_market_code             VARCHAR(20),
+
+--     dwelling_code               VARCHAR(50),
+--     dwelling_status_code        INT,
+--     dwelling_sr_no              VARCHAR(50),
+
+--     house_category              VARCHAR(50),
+
+--     total_rent_payable          DOUBLE PRECISION,
+--     total_rent_six_month_ago    DOUBLE PRECISION,
+--     price_remarks               VARCHAR(255),
+
+--     market_id                   INT,        -- changed to INT
+--     state_id                    INT,        -- changed to INT
+
+--     pitem_id                    INT,
+--     pitem_code                  VARCHAR(50),
+
+--     revised_total_rent_payable  DOUBLE PRECISION,
+--     price_imputed               INT,
+
+--     price_month_year            TIMESTAMP,
+--     price_data_status           VARCHAR(50),
+--     price_month                 VARCHAR(20),
+--     price_year                  VARCHAR(20),
+
+--     data_updation_uid           INT,
+--     data_updation_dtime         TIMESTAMP,
+--     iteration_id                INT,
+
+--     created_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                 
+-- );
+
+
+-- CREATE TABLE price_item.rural_mkt_prices (
+   
+--     nss_sector_code            VARCHAR(10),
+--     nss_state_code             VARCHAR(10),
+--     nss_district_code          VARCHAR(10),
+--     nss_village_code           VARCHAR(20),
+
+--     pitem_code                 VARCHAR(50),
+--     unit                       VARCHAR(20),
+--     quantity                   VARCHAR(20),
+--     spcl_code                  VARCHAR(20),
+
+--     item_price                 DOUBLE PRECISION,
+--     price_remarks              VARCHAR(255),
+
+--     market_id                  INT,
+--     state_id                   INT,
+--     sector_id                  INT,
+
+--     spcl_id                    INT,
+--     pitem_id                   INT,
+--     revised_item_price         DOUBLE PRECISION,
+
+--     price_imputed              INT,
+
+--     price_month_year           TIMESTAMP,
+--     price_data_status          VARCHAR(50),
+--     price_year                 VARCHAR(10),
+--     price_month                VARCHAR(10),
+--     price_collection_week_no   VARCHAR(10),
+
+--     data_updation_uid          INT,
+--     data_updation_dtime        TIMESTAMP,
+--     iteration_id               INT,
+
+--     created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE price_item.urban_mkt_prices (
+
+--     -- NSS Codes (same sequence position as rural version)
+--     nss_state_code             VARCHAR(10),
+--     nss_district_code          VARCHAR(10),
+--     nss_town_code              VARCHAR(10),
+--     nss_market_code            VARCHAR(20),
+
+--     -- Item identifiers
+--     pitem_code                 VARCHAR(50),
+--     unit                       VARCHAR(20),
+--     quantity                   VARCHAR(20),
+--     spcl_code                  VARCHAR(20),
+
+--     -- Prices
+--     item_price                 DOUBLE PRECISION,
+--     price_remarks              VARCHAR(255),
+
+--     -- IDs (same order as rural_mkt_prices)
+--     market_id                  INT,
+--     state_id                   INT,
+--     sector_id                  INT,
+
+--     spcl_id                    INT,
+--     pitem_id                   INT,
+--     revised_item_price         DOUBLE PRECISION,
+
+--     price_imputed              INT,
+
+--     -- Price timeline
+--     price_month_year           TIMESTAMP,
+--     price_data_status          VARCHAR(50),
+--     price_year                 VARCHAR(10),
+--     price_month                VARCHAR(10),
+--     price_collection_week_no   VARCHAR(10),
+
+--     -- Audit fields
+--     data_updation_uid          INT,
+--     data_updation_dtime        TIMESTAMP,
+--     iteration_id               INT,
+
+--     -- System timestamps
+--     created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE price_item.urban_mkt_online_prices (
+
+--     -- NSS Codes (urban structure)
+--     nss_state_code             VARCHAR(10),
+--     nss_district_code          VARCHAR(10),
+--     nss_town_code              VARCHAR(10),
+--     nss_market_code            VARCHAR(20),
+
+--     -- Item identifiers
+--     pitem_code                 VARCHAR(50),
+--     unit                       VARCHAR(20),
+--     quantity                   VARCHAR(20),
+--     spcl_code                  VARCHAR(20),
+
+--     -- Prices
+--     item_price                 DOUBLE PRECISION,
+--     price_remarks              VARCHAR(255),
+
+--     -- IDs
+--     market_id                  INT,
+--     state_id                   INT,
+--     sector_id                  INT,
+
+--     spcl_id                    INT,
+--     pitem_id                   INT,
+--     revised_item_price         DOUBLE PRECISION,
+
+--     price_imputed              INT,
+
+--     -- Time fields (same order as rural_mkt_prices)
+--     price_month_year           TIMESTAMP,
+--     price_data_status          VARCHAR(50),
+--     price_year                 VARCHAR(10),
+--     price_month                VARCHAR(10),
+--     price_collection_week_no   VARCHAR(10),
+
+--     -- Audit fields
+--     data_updation_uid          INT,
+--     data_updation_dtime        TIMESTAMP,
+--     iteration_id               INT,
+
+--     -- System timestamps
+--     created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE price_item.urban_airfare_prices (
+
+--     -- NSS codes (urban structure)
+--     nss_sector_code            VARCHAR(10),
+--     nss_state_code             VARCHAR(10),
+--     nss_district_code          VARCHAR(10),
+--     nss_town_code              VARCHAR(10),
+--     nss_market_code            VARCHAR(20),
+
+--     -- Item identifiers
+--     pitem_code                 VARCHAR(50),
+--     route_id                   VARCHAR(50),
+--     spcl_code                  VARCHAR(20),
+
+--     -- Prices
+--     item_price                 DOUBLE PRECISION,
+--     price_remarks              VARCHAR(255),
+
+--     -- IDs
+--     market_id                  INT,
+--     state_id                   INT,
+--     sector_id                  INT,
+
+--     spcl_id                    INT,
+--     pitem_id                   INT,
+--     revised_item_price         DOUBLE PRECISION,
+
+--     price_imputed              INT,
+
+--     -- Time fields (same sequence as other price tables)
+--     price_month_year           TIMESTAMP,
+--     price_data_status          VARCHAR(50),
+--     price_year                 VARCHAR(10),
+--     price_month                VARCHAR(10),
+
+--     -- Audit fields
+--     data_updation_uid          INT,
+--     data_updation_dtime        TIMESTAMP,
+--     iteration_id               INT,
+
+--     -- System timestamps
+--     created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+-- CREATE TABLE price_item.urban_pds_prices (
+
+--     -- NSS location codes
+--     nss_sector_code            VARCHAR(10),
+--     nss_state_code             VARCHAR(10),
+--     nss_district_code          VARCHAR(10),
+--     nss_town_code              VARCHAR(10),
+--     nss_market_code            VARCHAR(20),
+
+--     -- Item info
+--     pitem_code                 VARCHAR(50),
+--     item_price                 DOUBLE PRECISION,
+--     distribution_status        VARCHAR(50),
+--     item_type_id               INT,
+--     price_remarks              VARCHAR(255),
+
+--     -- IDs
+--     state_id                   INT,
+--     sector_id                  INT,
+--     pitem_id                   INT,
+--     market_id                  INT,
+
+--     -- Revised price + status
+--     revised_item_price         DOUBLE PRECISION,
+--     price_imputed              INT,
+
+--     -- Time fields (same sequence as your other price tables)
+--     price_month_year           TIMESTAMP,
+--     price_data_status          VARCHAR(50),
+--     price_year                 VARCHAR(10),
+--     price_month                VARCHAR(10),
+
+--     -- Audit fields
+--     data_updation_uid          INT,
+--     data_updation_dtime        TIMESTAMP,
+--     iteration_id               INT,
+
+--     -- System timestamps
+--     created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+
+
+

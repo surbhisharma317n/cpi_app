@@ -1,0 +1,416 @@
+-- ===========================
+-- STATE MASTER
+-- ===========================
+CREATE TABLE state_master (
+    state_id INT PRIMARY KEY,
+    nss_state_code VARCHAR(20) UNIQUE,
+    nss_state_name VARCHAR(100),
+    lgd_state_code INT UNIQUE,
+    lgd_state_name VARCHAR(100),
+    state_name VARCHAR(100) NOT NULL,
+    state_ut VARCHAR(20),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- DISTRICT MASTER
+-- ===========================
+CREATE TABLE district_master (
+    district_id INT PRIMARY KEY,
+    nss_district_code VARCHAR(20) UNIQUE,
+    nss_district_name VARCHAR(100),
+    lgd_district_code INT UNIQUE,
+    lgd_district_name VARCHAR(100),
+    district_name VARCHAR(100),
+    state_id INT NOT NULL REFERENCES state_master(state_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- SUBDISTRICT MASTER
+-- ===========================
+CREATE TABLE subdistrict_master (
+    subdistrict_id INT PRIMARY KEY,
+    nss_subdistrict_code VARCHAR(20) UNIQUE,
+    nss_subdistrict_name VARCHAR(100),
+    lgd_subdistrict_code INT UNIQUE,
+    lgd_subdistrict_name VARCHAR(100),
+    subdistrict_name VARCHAR(100),
+    district_id INT NOT NULL REFERENCES district_master(district_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- VILLAGE MASTER
+-- ===========================
+CREATE TABLE vill_master (
+    vill_id INT PRIMARY KEY,
+    nss_vill_code VARCHAR(20) UNIQUE,
+    nss_vill_name VARCHAR(100),
+    lgd_vill_code INT UNIQUE,
+    lgd_vill_name VARCHAR(100),
+    vill_name VARCHAR(100),
+    subdistrict_id INT NOT NULL REFERENCES subdistrict_master(subdistrict_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- TOWN MASTER
+-- ===========================
+-- CREATE TABLE town_master (
+--     town_id INT PRIMARY KEY,
+--     nss_town_code VARCHAR(20) UNIQUE,
+--     nss_town_name VARCHAR(100),
+--     lgd_town_code INT UNIQUE,
+--     lgd_town_name VARCHAR(100),
+       
+--     is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+--     created_by VARCHAR(100),
+--     updated_by VARCHAR(100),
+--     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+
+
+
+CREATE TABLE town_master (
+    town_id INT PRIMARY KEY,
+    nss_town_code VARCHAR(20) UNIQUE,
+    nss_town_name VARCHAR(100) NOT NULL,
+    lgd_town_code INT UNIQUE,
+    lgd_town_name VARCHAR(100),
+    town_name VARCHAR(200),
+    subdistrict_id INT NOT NULL REFERENCES subdistrict_master(subdistrict_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- DISTRICT ↔ TOWN MAPPING
+-- ===========================
+CREATE TABLE district_town_mapping (
+    district_id INT NOT NULL REFERENCES district_master(district_id) ON DELETE CASCADE,
+    town_id INT NOT NULL REFERENCES town_master(town_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (district_id, town_id)
+);
+
+-- ===========================
+-- SECTOR MASTER
+-- ===========================
+CREATE TABLE sector_master (
+    sector_id INT PRIMARY KEY,
+    sector_desc VARCHAR(200),
+    sector_code VARCHAR(20) UNIQUE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE CHECK (is_active IN (TRUE, FALSE)),
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- MARKET MASTER
+-- ===========================
+CREATE TABLE market_master (
+    market_id INT PRIMARY KEY,
+    sector_id INT NOT NULL REFERENCES sector_master(sector_id) ON DELETE CASCADE,
+    nss_market_code VARCHAR(20) UNIQUE,
+    nss_market_name VARCHAR(200),
+    market_name VARCHAR(200),
+    vill_id INT REFERENCES vill_master(vill_id) ON DELETE SET NULL,
+    town_id INT REFERENCES town_master(town_id) ON DELETE SET NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_vill_or_town CHECK (
+        (vill_id IS NOT NULL AND town_id IS NULL) OR
+        (vill_id IS NULL AND town_id IS NOT NULL)
+    )
+);
+
+-- ===========================
+-- GROUP / CATEGORY / SUBGROUP / SECTION / GS / ITEM
+-- ===========================
+CREATE TABLE group_master (
+    group_id INT PRIMARY KEY,
+    group_desc VARCHAR(200),
+    group_code VARCHAR(20) UNIQUE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE category_master (
+    category_id INT PRIMARY KEY,
+    category_desc VARCHAR(200),
+    category_code VARCHAR(20) UNIQUE,
+    group_id INT NOT NULL REFERENCES group_master(group_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE subgroup_master (
+    subgroup_id INT PRIMARY KEY,
+    subgroup_desc VARCHAR(200),
+    subgroup_code VARCHAR(20) UNIQUE,
+    category_id INT NOT NULL REFERENCES category_master(category_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE section_master (
+    section_id INT PRIMARY KEY,
+    section_desc VARCHAR(200),
+    section_code VARCHAR(20) UNIQUE,
+    subgroup_id INT NOT NULL REFERENCES subgroup_master(subgroup_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE gs_master (
+    gs_id INT PRIMARY KEY,
+    gs_desc VARCHAR(200),
+    gs_code VARCHAR(20) UNIQUE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE weighted_item_master (
+    witem_id INT PRIMARY KEY,
+    weighted_item_desc VARCHAR(200),
+    weighted_item_code VARCHAR(20) UNIQUE,
+    hces_item_code VARCHAR(20),
+    section_id INT NOT NULL REFERENCES section_master(section_id) ON DELETE CASCADE,
+    gs_id INT REFERENCES gs_master(gs_id),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE priced_item_master (
+    pitem_id INT PRIMARY KEY,
+    priced_item_desc VARCHAR(200),
+    priced_item_code VARCHAR(20) UNIQUE,
+    witem_id INT NOT NULL REFERENCES weighted_item_master(witem_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- ITEM WEIGHT MASTER
+-- ===========================
+CREATE TABLE item_weight_master (
+    state_id INT NOT NULL REFERENCES state_master(state_id) ON DELETE CASCADE,
+    sector_id INT NOT NULL REFERENCES sector_master(sector_id) ON DELETE CASCADE,
+    witem_id INT NOT NULL REFERENCES weighted_item_master(witem_id) ON DELETE CASCADE,
+    expenditure_hces NUMERIC(12,2),
+    weight NUMERIC(8,4),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (state_id, sector_id, witem_id)
+);
+
+-- ===========================
+-- SPECIAL CODE MASTER
+-- ===========================
+CREATE TABLE spcl_code_master (
+    spcl_id INT PRIMARY KEY,
+    spcl_code VARCHAR(20) UNIQUE,
+    spcl_code_desc VARCHAR(200),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- ITEM PRICES
+-- ===========================
+CREATE TABLE item_prices (
+    trans_id SERIAL PRIMARY KEY,
+    month DATE NOT NULL,
+    market_id INT NOT NULL REFERENCES market_master(market_id) ON DELETE CASCADE,
+    item_id INT NOT NULL REFERENCES priced_item_master(pitem_id) ON DELETE CASCADE,
+    price NUMERIC(12,2) NOT NULL,
+    spcl_id INT REFERENCES spcl_code_master(spcl_id),
+    price_remarks VARCHAR(255),
+    sector_id INT NOT NULL REFERENCES sector_master(sector_id) ON DELETE CASCADE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ===========================
+-- PERFORMANCE INDEXES
+-- ===========================
+CREATE INDEX idx_district_state ON district_master(state_id);
+CREATE INDEX idx_subdistrict_district ON subdistrict_master(district_id);
+CREATE INDEX idx_village_subdistrict ON vill_master(subdistrict_id);
+CREATE INDEX idx_market_village ON market_master(vill_id);
+CREATE INDEX idx_market_town ON market_master(town_id);
+CREATE INDEX idx_item_prices_market ON item_prices(market_id);
+CREATE INDEX idx_item_prices_item ON item_prices(item_id);
+
+
+
+
+
+CREATE OR REPLACE VIEW item_prices_view AS
+SELECT
+    sm.state_id,
+    sm.state_name,
+    dm.district_id,
+    dm.district_name,
+    sdm.subdistrict_id,
+    sdm.subdistrict_name,
+    COALESCE(tm.town_id::text, vm.vill_id::text) AS location_id,
+    COALESCE(tm.town_name, vm.vill_name) AS location_name,
+    CASE 
+        WHEN tm.town_id IS NOT NULL THEN 'Urban'
+        ELSE 'Rural'
+    END AS market_type,
+    mm.market_id,
+    mm.market_name,
+    sec.sector_id,
+    sec.sector_desc AS sector_name,
+    grp.group_id,
+    grp.group_desc AS group_name,
+    cat.category_id,
+    cat.category_desc AS category_name,
+    subgrp.subgroup_id,
+    subgrp.subgroup_desc AS subgroup_name,
+    secm.section_id,
+    secm.section_desc AS section_name,
+    wim.witem_id,
+    wim.weighted_item_desc AS weighted_item_name,
+    pim.pitem_id AS item_id,
+    pim.priced_item_desc AS item_name,
+    ip.trans_id AS price_id,
+    ip.price,
+    ip.month AS price_month,
+    ip.created_at AS price_recorded_at
+FROM item_prices ip
+JOIN priced_item_master pim ON ip.item_id = pim.pitem_id
+JOIN weighted_item_master wim ON pim.witem_id = wim.witem_id
+JOIN section_master secm ON wim.section_id = secm.section_id
+JOIN subgroup_master subgrp ON secm.subgroup_id = subgrp.subgroup_id
+JOIN category_master cat ON subgrp.category_id = cat.category_id
+JOIN group_master grp ON cat.group_id = grp.group_id
+JOIN sector_master sec ON grp.group_id IS NOT NULL AND ip.sector_id = sec.sector_id
+JOIN market_master mm ON ip.market_id = mm.market_id
+LEFT JOIN town_master tm ON mm.town_id = tm.town_id
+LEFT JOIN vill_master vm ON mm.vill_id = vm.vill_id
+JOIN subdistrict_master sdm 
+       ON (tm.subdistrict_id = sdm.subdistrict_id OR vm.subdistrict_id = sdm.subdistrict_id)
+JOIN district_master dm ON sdm.district_id = dm.district_id
+JOIN state_master sm ON dm.state_id = sm.state_id;
+
+
+
+
+
+CREATE OR REPLACE VIEW rural_market_view AS
+SELECT
+    sm.state_id,
+    sm.state_name,
+    dm.district_id,
+    dm.district_name,
+    sdm.subdistrict_id,
+    sdm.subdistrict_name,
+    vm.vill_id,
+    vm.nss_vill_name,
+    mm.market_id,
+    mm.nss_market_name,
+    mm.sector_id,
+    mm.is_active,
+    mm.created_at,
+    mm.updated_at
+FROM market_master mm
+JOIN vill_master vm ON mm.vill_id = vm.vill_id
+JOIN subdistrict_master sdm ON vm.subdistrict_id = sdm.subdistrict_id
+JOIN district_master dm ON sdm.district_id = dm.district_id
+JOIN state_master sm ON dm.state_id = sm.state_id
+WHERE mm.vill_id IS NOT NULL;
+
+
+
+CREATE OR REPLACE VIEW urban_market_view AS
+SELECT
+    sm.state_id,
+    sm.state_name,
+    dm.district_id,
+    dm.district_name,
+    sdm.subdistrict_id,
+    sdm.subdistrict_name,
+    tm.town_id,
+    tm.nss_town_name,
+    mm.market_id,
+    mm.nss_market_name,
+    mm.sector_id,
+    mm.is_active,
+    mm.created_at,
+    mm.updated_at
+FROM market_master mm
+JOIN town_master tm ON mm.town_id = tm.town_id
+JOIN subdistrict_master sdm ON tm.subdistrict_id = sdm.subdistrict_id
+JOIN district_master dm ON sdm.district_id = dm.district_id
+JOIN state_master sm ON dm.state_id = sm.state_id
+WHERE mm.town_id IS NOT NULL;
+
+
+
+
+

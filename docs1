@@ -1,0 +1,177 @@
+# Improved Application Workflow & UI Prompts
+
+## 1. Upload Section with Validation
+
+### 1.1 Month & Year Validation
+- Automatically detect and validate file names against selected month/year from filter section
+- Display clear error messages when file contains mismatched period data
+- Provide option to auto-rename or skip mismatched files
+
+### 1.2 Definition Fields Validation
+- **Pre-upload Validation**: Compare file columns against predefined definition fields before allowing upload
+- **Missing Fields Report**: Generate comprehensive list of missing required fields with column names and file references
+- **Downloadable Error Log**: Provide CSV/Excel format error log with detailed explanation of validation failures
+- **Sample Files**: Include downloadable template files with correct structure and required columns for each data type (Rural Market, Urban Market, House Rent, PDS, Electricity, etc.)
+
+### 1.3 Upload Flow
+- **Progressive Disclosure**: Upload section hides during processing, shows progress modal with detailed status
+- **Failure Recovery**: On upload failure, show upload section again with error summary and option to retry with corrections
+- **Success Transition**: After successful upload, display validation summary and auto-initiate compilation progress
+
+### 1.4 Master Data Integration
+- **Database-driven Validation**: All validation rules should reference master data tables (markets, items, COICOP codes) from database
+- **Historical Index Data**: Fetch previous month/year indices from database for imputation and trend analysis
+- **Reference Data Management**: Maintain central repository for weights, definitions, and classification codes
+
+## 2. Compilation & Summary
+
+### 2.1 Compilation Process
+- **Real-time Progress**: Show method-wise compilation status with individual progress bars for each script (House Rent, Electricity, PDS, Fuel, Telecom, Postal/OTT, Railfare, Market Items, All India)
+- **Status Indicators**: Color-coded status (Pending, Running, Completed, Failed) with estimated completion time
+- **Error Handling**: If any method fails, show detailed error with option to retry only failed methods
+
+### 2.2 Compilation Summary
+- **Success View**: Display comprehensive summary with:
+  - Rural indices breakdown (House Rent, PDS, Electricity, Fuel)
+  - Urban indices breakdown (House Rent, Market Items, Telecom, Postal/OTT)
+  - All India indices (CPI Rural, CPI Urban, CPI Combined)
+  - Trend indicators (comparison with previous period)
+  - Active "Import to Database" button prominently displayed
+- **Failure View**: Show error summary with:
+  - Failed methods list with error messages
+  - Recommended actions
+  - Option to retry or contact support
+
+## 3. Filter Section & Date Logic
+
+### 3.1 Compilation Types
+- **Provisional (M-1)**:
+  - Available only before 12th of current month
+  - Shows countdown to compilation deadline
+  - Auto-disables after cutoff date
+- **Final (M-2)**:
+  - Requires approval workflow for compilation
+  - Shows approval status and history
+  - Compilation allowed only after provisional data is frozen
+
+### 3.2 Date-based Restrictions
+- **Reference Date**: 12th of each month as compilation cutoff
+- **Provisional Window**: 1st to 11th of current month
+- **Final Window**: After provisional freeze, requires approver permission
+- **Override Mechanism**: Admin/Approver can override freeze with justification note
+
+### 3.3 Index Release Management
+- **Release Workflow**: Approver can mark index as "Finalized" for public viewing
+- **Access Control**: Before release, only Compiler/Approver can view; after release, all users can view
+- **Version Control**: Maintain history of released indices with timestamps and user details
+
+## 4. Outputs & Data Visualization
+
+### 4.1 Weights Display
+- **Rural/Urban Bifurcation**: Separate tabs/sections for Rural and Urban indices
+- **Category-wise Breakdown**:
+  - House Rent (HR) indices with sub-components
+  - PDS items with individual item-level indices
+  - Other categories (Fuel, Electricity, Telecom, etc.) with detailed breakdown
+- **Interactive Charts**: Line charts showing index trends over time, bar charts comparing rural vs urban
+
+### 4.2 COICOP Data Visualization
+- **Hierarchical Display**: Expandable tree view showing COICOP classification at division, group, class, and item levels
+- **Rural/Urban Toggle**: Switch between rural and urban weights and indices
+- **Detailed Tables**: Show individual COICOP items with:
+  - COICOP code and description
+  - Rural weight
+  - Urban weight
+  - Combined weight
+  - Current index values
+  - Month-over-month changes
+- **Data Export**: Option to export COICOP data in Excel/CSV format
+
+### 4.3 Database Integration
+- **Compiled Indices Section**: Pull real-time data from database tables showing:
+  - Rural indices (house_rent, pds, electricity, fuel)
+  - Urban indices (house_rent, market_items, telecom, postal_ott)
+  - All India indices (cpi_rural, cpi_urban, cpi_combined)
+- **Input Prices Section**: Display raw price data used for compilation with:
+  - Market-wise price listings
+  - Item-wise price trends
+  - Comparison with previous periods
+- **Search & Filter**: Allow users to filter by date range, sector, item category
+
+### 4.4 Annexure Layout
+- **Professional Format**: Create standardized annexure layout with:
+  - Header: Title, month, year, compilation type
+  - Main Table: COICOP-wise breakdown with weights and indices
+  - Rural/Urban columns side by side for comparison
+  - Footer: Source attribution and generation timestamp
+- **Export Options**: Download as PDF, Excel, or CSV
+- **Print-friendly**: Optimized for printing with proper pagination
+
+## 5. Role-Based Access Control
+
+### 5.1 User Roles
+- **Compiler**: Can upload data, run compilation, view provisional results, cannot finalize
+- **Approver**: Can review compilation, approve final release, override restrictions
+- **Admin**: Full access including user management, configuration, and emergency overrides
+- **Viewer**: Can only view finalized indices and reports
+
+### 5.2 Access Rules
+- **Pre-finalization**: Only Compiler and Approver can access compilation interface and provisional data
+- **Post-finalization**: All authenticated users can view released indices
+- **Emergency Override**: Admin can unlock frozen periods with audit trail
+
+## 6. UI/UX Improvements
+
+### 6.1 Navigation & Layout
+- **Step-by-step Wizard**: Clear progress indicator showing current stage (Upload → Validate → Compile → Import → View)
+- **Collapsible Sections**: Allow users to expand/collapse sections for focused work
+- **Sticky Filters**: Keep filter section visible while scrolling for quick reference
+
+### 6.2 Feedback & Notifications
+- **Toast Notifications**: Non-intrusive success/error messages
+- **Progress Indicators**: Animated progress bars with estimated time remaining
+- **Status Badges**: Clear visual indicators for pending, in-progress, completed, failed states
+
+### 6.3 Data Visualization
+- **Interactive Charts**: Hover to see exact values, click to drill down
+- **Comparison Views**: Side-by-side comparison of rural vs urban indices
+- **Trend Analysis**: Show month-over-month and year-over-year changes
+
+### 6.4 Export & Reporting
+- **Multiple Formats**: Download reports as PDF, Excel, CSV
+- **Custom Reports**: Allow users to select specific sections for export
+- **Scheduled Reports**: Option to schedule automatic report generation
+
+## 7. Workflow Optimization
+
+### 7.1 Parallel Processing
+- Allow multiple compilation scripts to run simultaneously
+- Show individual progress for each method
+- Failed methods don't block successful ones
+
+### 7.2 Data Caching
+- Cache master data (COICOP, weights, markets) for faster validation
+- Pre-load previous period indices for trend calculation
+
+### 7.3 Audit Trail
+- Log all actions with timestamps and user details
+- Maintain version history for all compiled indices
+- Track approval/release workflow with comments
+
+## 8. Error Handling & Recovery
+
+### 8.1 Validation Failures
+- Provide actionable error messages with specific file and column names
+- Allow download of validation report
+- Suggest corrections based on missing fields
+
+### 8.2 Compilation Failures
+- Show which specific script failed
+- Provide error logs for debugging
+- Allow retry of only failed methods
+- Option to contact support with error details
+
+### 8.3 Data Integrity
+- Automatic backup before database import
+- Rollback capability on import failure
+- Validation checks before final database commit

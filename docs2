@@ -1,0 +1,183 @@
+________________________________________
+🚀 CPI Index System – Refined UI & Workflow Specification
+________________________________________
+🔹 1. Upload Section (Data Intake)
+✅ Pre-Upload Validation
+Before enabling upload:
+1.	Month & Year Validation
+o	Validate file metadata against selected filters (Month, Year).
+o	❌ If mismatch → show error:
+	“Selected period does not match file data.”
+2.	File Count & Schema Validation
+o	Compare:
+	Number of uploaded files
+	Column names vs definition fields (master config)
+o	❌ If mismatch:
+	Show:
+	Missing columns
+	Extra columns
+	Missing files
+3.	Support Downloads
+o	📥 Download:
+	Error log file (CSV/TXT)
+	Sample ZIP file (correct format template)
+________________________________________
+✅ Upload Flow (UI Behavior)
+•	If validation passes:
+o	Enable Upload ZIP button
+•	On clicking Upload:
+o	Hide upload form
+o	Show:
+	Upload progress bar
+	Status logs (streaming if possible)
+•	After Upload:
+o	❌ If failed:
+	Show error summary
+	Show upload section again
+o	✅ If success:
+	Show:
+	Upload summary
+	Start Compilation Process
+________________________________________
+🔹 2. Compilation Section
+⚙️ Compilation Logic
+•	Use:
+o	Previous indices from DB (for imputation)
+o	Master data from DB (not static files)
+•	Store:
+o	Raw uploaded data
+o	Cleaned/validated data
+o	Compilation outputs
+________________________________________
+📊 Compilation UI States
+🟡 In Progress
+•	Show:
+o	Progress %
+o	Logs
+o	Steps (validation → processing → indexing)
+🔴 Failed
+•	Show:
+o	Error summary
+o	Download error logs
+🟢 Success
+•	Show:
+o	Compilation Summary
+o	Status: SUCCESS
+o	Enable button:
+👉 “Import to DB”
+________________________________________
+🔹 3. Import to Database
+•	Enabled only after successful compilation
+After Import:
+•	Store:
+o	Final indices
+o	Price data
+o	Outputs
+•	Show:
+o	Import summary
+o	Record counts
+o	Time taken
+________________________________________
+🔹 4. Role-Based Visibility
+Stage	Access
+Before Finalization	Compiler + Approver
+After Finalization	All Users
+________________________________________
+🔹 5. Filter Section (Smart Defaults)
+🎯 Auto Selection Logic
+•	Based on current date:
+o	M-1 → Provisional
+o	M-2 → Final
+________________________________________
+📅 Compilation Rules
+•	Reference Date: 12th of every month
+Condition	Rule
+Date < 12	Compilation allowed
+Date ≥ 12	Compilation blocked
+________________________________________
+🔓 Override Logic (Approver/Admin)
+For Final Data:
+•	Approver can:
+o	Reset final compilation
+o	Re-run compilation
+Release Control:
+•	Approver can:
+o	Mark index as Finalized
+o	Release for public access
+Admin Privileges:
+•	Can:
+o	Re-open frozen compilation
+o	Allow re-compilation anytime
+________________________________________
+🔹 6. Weights Section
+📊 Output Views
+•	Display weights split by:
+o	Rural
+o	Urban
+•	Categories:
+o	HR
+o	PDS
+o	Others
+•	Data Source:
+o	Based on processed sheets
+________________________________________
+🔹 7. COICOP Section
+📁 Display Structure
+•	Show:
+o	All COICOP categories from uploaded files
+o	Sheet-wise breakdown
+📊 Views:
+•	Rural
+•	Urban
+________________________________________
+🔹 8. Output Section
+•	Fetch directly from DB (post compilation)
+Includes:
+•	Index values
+•	Aggregated outputs
+•	Category-wise breakdown
+________________________________________
+🔹 9. Price Data Section
+•	Show:
+o	Final processed price data
+o	Data stored in DB after compilation
+________________________________________
+🔹 10. Annexure Section
+•	Generate:
+o	Predefined report layout
+Includes:
+•	Tables
+•	Structured outputs
+•	Export options:
+o	Excel
+o	PDF
+________________________________________
+🎯 Suggested UI Flow (Step-by-Step)
+Filters Selection
+      ↓
+Upload Validation
+      ↓
+Upload ZIP
+      ↓
+Upload Progress
+      ↓
+Compilation Running
+      ↓
+Compilation Result
+      ↓
+Import to DB
+      ↓
+Finalization (Approver)
+      ↓
+Public View Enabled
+________________________________________
+💡 Recommended Enhancements (Important)
+•	✅ Use WebSockets for real-time progress (upload + compile)
+•	✅ Use PostgreSQL COPY for fast DB insert (you already plan this 👍)
+•	✅ Maintain:
+o	audit logs
+o	versioning for re-compilation
+•	✅ Store:
+o	file checksum (avoid duplicate uploads)
+________________________________________
+
